@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  dummy0:
+    image: test/dummy
+    ports:
+      - 10000:10000
+    command: /usr/bin/dummy 10000
+
+  dummy1:
+    image: test/dummy
+    ports:
+      - 10001:10001
+    command: /usr/bin/dummy 10001
