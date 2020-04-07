@@ -1,5 +1,5 @@
 ## Nginx Bundle
-It's a bundle of sources for build nginx, but it is not another OpenResty.
+It's a bundle of sources for build nginx, but it is not another Openresty.
 
 ## Build
 

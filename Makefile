@@ -2,7 +2,7 @@
 PREFIX   		:= /usr/local/nginx
 BUILD_PATH     	:= ${PWD}/build
 LIBRARY_PATH 	:= ${PWD}/library
-SOURCE_PATH  	:= ${PWD}/source
+SOURCE_PATH  	:= ${PWD}/sources
 PATCHES_PATH 	:= ${PWD}/patches
 NGX_LUALIB_PATH := ${PREFIX}/lualib
 INSTALL_PATH    := ${PWD}/install
@@ -10,20 +10,20 @@ INSTALL_PATH    := ${PWD}/install
 # options for build nginx
 NGX_CC_OPT 	:= "-O2"
 NGX_LD_OPT	:= "-Wl,-rpath,${LIBRARY_PATH}/luajit/lib"
-CPUS        ?= $(shell nproc)
+CPUS		?= $(shell nproc)
 
 # version of dependencies
-ZLIB_VERSION    					:= 1.2.11
-PCRE_VERSION    					:= 8.44
-OPENSSL_VERSION 					:= 1_1_1d
-NGINX_VERSION   					:= 1.16.1
-LUAJIT_VERSION  					:= 2.1-20190507
-NGX_LUA_MODULE_VERSION 				:= 0.10.15
-NGX_UPSTREAM_CHECK_MODULE_VERSION 	:= master
-NGX_LUA_WAF_VERSION					:= 0.7.2
-NGX_UPSYNC_MODULE_VERSION			:= 2.1.2
-NGX_DEVEL_KIT_VERSION 				:= 0.3.1
-NGX_HEADER_MORE_VERSION 			:= 0.33
+ZLIB_VERSION                        := 1.2.11
+PCRE_VERSION                        := 8.44
+OPENSSL_VERSION                     := 1_1_1d
+NGINX_VERSION                       := 1.16.1
+LUAJIT_VERSION                      := 2.1-20190507
+NGX_LUA_MODULE_VERSION              := 0.10.15
+NGX_UPSTREAM_CHECK_MODULE_VERSION   := master
+NGX_LUA_WAF_VERSION                 := 0.7.2
+NGX_UPSYNC_MODULE_VERSION           := 2.1.2
+NGX_DEVEL_KIT_VERSION               := 0.3.1
+NGX_HEADER_MORE_VERSION             := 0.33
 # lualib
 LUA_RESTY_CORE_VERSION 				:= 0.1.17
 LUA_RESTY_LRUCACHE_VERSION 			:= 0.09
