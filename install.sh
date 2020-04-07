@@ -20,27 +20,24 @@ PID_FILE=${PREFIX}/logs/nginx.pid
 INIT_SECRIPT_PATH=/etc/init.d/nginx
 SERVICE_UNIT_PATH=/lib/systemd/system/nginx.service
 
-function decompress() {
+function pre_install() {
+  # decompress
   mkdir -p ${TEMP_DIR}
   tail -n +${LINES} "$0" > ${TEMP_DIR}/temp.tar.gz
-  tar zxfv ${TEMP_DIR}/tmp.tar.gz -C ${TEMP_DIR}
-}
+  tar zxf ${TEMP_DIR}/temp.tar.gz -C ${TEMP_DIR}
 
-function prepare() {
   test -d "${PREFIX}" || mkdir -p ${PREFIX}
-  test -d "${PREFIX}/sbin" || mkdir -p ${PREFIX}/sbin
-  test -d "${PREFIX}/"
 }
 
 function install() {
-  cp -r ${TEMP_DIR}/${PREFIX}/* ${PREFIX}
+  cp -r ${TEMP_DIR}${PREFIX}/* ${PREFIX}
 }
 
 function update() {
   # backup the old binary first
   test ! -f ${BINARY} || mv ${BINARY} ${BINARY}.old
   # cp the new one
-  cp ${TEMP_DIR}/sbin/nginx ${BINARY}
+  cp ${TEMP_DIR}${PREFIX}/sbin/nginx ${BINARY}
 
   # check current config file
   ${BINARY} -t
@@ -56,10 +53,10 @@ function update() {
   echo "upgrade success"
 }
 
-function post() {
+function post_install() {
   # install service control files
   if command -v systemctl &> /dev/null; then
-    # EL7
+    # EL7 or EL8
     cp ${TEMP_DIR}/nginx.service  ${SERVICE_UNIT_PATH}
     systemctl daemon-reload
     systemctl enable nginx
@@ -69,19 +66,23 @@ function post() {
     chmod +x ${INIT_SECRIPT_PATH}
     chkconfig --add nginx
   fi
+
+  # sbin
+  ln -sf ${PREFIX}/sbin/nginx  /usr/sbin/nginx
 }
 
 function main() {
-  prepare
+  pre_install
 
   if [[ -f ${BINARY} ]]; then
     update
-    echo "update done"
+    echo "update nginx success"
   else
+    echo "install nginx success"
     install
   fi
 
-  post
+  post_install
 }
 
 main
