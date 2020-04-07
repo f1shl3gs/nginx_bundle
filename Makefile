@@ -46,19 +46,19 @@ LUA_RESTY_LRUCACHE_SOURCE 			:= https\://github.com/openresty/lua-resty-lrucache
 
 # list of resource to build nginx
 RESOURCES := \
-	${ZLIB_SOURCE} \
-    ${PCRE_SOURCE} \
-    ${NGINX_SOURCE} \
-    ${OPENSSL_SOURCE} \
-    ${LUAJIT_SOURCE} \
-    ${NGX_LUA_WAF_SOURCE} \
-    ${NGX_LUA_MODULE_SOURCE} \
-    ${NGX_UPSTREAM_CHECK_MODULE_SOURCE} \
-    ${NGX_UPSYNC_MODULE_SOURCE} \
-    ${NGX_DEVEL_KIT_SOURCE}	\
-    ${NGX_HEADER_MORE_SOURCE} \
-    ${LUA_RESTY_CORE_SOURCE} \
-    ${LUA_RESTY_LRUCACHE_SOURCE}
+    ${ZLIB_SOURCE} \
+	${PCRE_SOURCE} \
+	${NGINX_SOURCE} \
+	${OPENSSL_SOURCE} \
+	${LUAJIT_SOURCE} \
+	${NGX_LUA_WAF_SOURCE} \
+	${NGX_LUA_MODULE_SOURCE} \
+	${NGX_UPSTREAM_CHECK_MODULE_SOURCE} \
+	${NGX_UPSYNC_MODULE_SOURCE} \
+	${NGX_DEVEL_KIT_SOURCE}	\
+	${NGX_HEADER_MORE_SOURCE} \
+	${LUA_RESTY_CORE_SOURCE} \
+	${LUA_RESTY_LRUCACHE_SOURCE}
 
 .PHONY: luajit build clean
 
@@ -115,19 +115,18 @@ build: patch luajit
 	# package
 	PREFIX=${PREFIX} NGINX_VERSION=${NGINX_VERSION} INSTALL_PATH=${INSTALL_PATH} bash ./package.sh
 
-$(RESOURCES):
-	wget -q -P ${SOURCE_PATH} $@
-
 unzip: download
 	@for FILE in ${SOURCE_PATH}/*; do unzip $${FILE} -d ${BUILD_PATH}; done
 
-download: export MAKEFLAGS="-j${CPUS}"
-download: $(RESOURCES)
+download:
+	@for URL in ${RESOURCES}; 				\
+	do 										\
+	  wget -P ${SOURCE_PATH} $${URL}; 		\
+	done
 
 patch: patches/check_1.16.1+.patch unzip
 	cd ${BUILD_PATH}/nginx-release-${NGINX_VERSION} && patch -p1 < ${PATCHES_PATH}/check_1.16.1+.patch && touch .patch
 
-# XCFLAGS='-DLUAJIT_ENABLE_LUA52COMPAT -DLUAJIT_ENABLE_GC64 -msse4.2'
 luajit: unzip
 	cd ${BUILD_PATH}/luajit2-${LUAJIT_VERSION} && \
 		make install -j${CPUS} PREFIX=${LIBRARY_PATH}/luajit XCFLAGS='-DLUAJIT_NUMMODE=2 -DLUAJIT_ENABLE_LUA52COMPAT -DLUAJIT_ENABLE_GC64 -msse4.2'
